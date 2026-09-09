@@ -1,0 +1,31 @@
+name: Auto-Generate Enterprise Pages
+
+on:
+  schedule:
+    - cron: '0 0 * * 1' # हर हफ्ते सोमवार को अपने आप रन होगा
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+  permissions:
+    contents: write
+  steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Run Generator Script
+      run: python generator_2.py
+
+    - name: Commit and Push Generated Docs
+      run: |
+        git config --global user.name "Auto-Arbitrage Bot"
+        git config --global user.email "bot@arbitrage.local"
+        git add generated_docs/
+        git commit -m "Auto-generated new high-intent enterprise target pages" || exit 0
+        git push
