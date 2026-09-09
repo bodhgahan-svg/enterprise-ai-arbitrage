@@ -20,7 +20,7 @@ jobs:
         python-version: '3.10'
 
     - name: Run Generator Script
-      run: python generator_2.py
+      run: python generator.py
 
     - name: Commit and Push Generated Docs
       run: |
