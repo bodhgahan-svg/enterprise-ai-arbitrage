@@ -110,6 +110,55 @@ def build_programmatic_pages():
         with open(filename, "w", encoding="utf-8") as f:
             f.write(page_content)
         print(f"[+] Generated Target Page [{index+1}]: {filename}")
+import os
+
+# --- इस कोड को अपनी generator.py के आखिर में जोड़ दें ---
+
+output_dir = "generated_docs"
+os.makedirs(output_dir, exist_ok=True)
+
+# फोल्डर की सभी .md फाइलों की लिस्ट बनाएं
+md_files = [f for f in os.listdir(output_dir) if f.endswith('.md')]
+
+# सुंदर HTML होमपेज का स्ट्रक्चर
+html_content = """<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise AI Arbitrage - B2B Solutions</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; line-height: 1.6; color: #333; background: #fdfdfd; }
+        h1 { color: #111; border-bottom: 2px solid #eaeaea; padding-bottom: 10px; }
+        p { color: #666; }
+        ul { list-style-type: none; padding: 0; }
+        .card { background: #fff; border: 1px solid #e1e4e8; border-radius: 6px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: 0.2s; }
+        .card:hover { border-color: #0366d6; box-shadow: 0 3px 6px rgba(0,0,0,0.1); }
+        a { color: #0366d6; text-decoration: none; font-weight: 600; font-size: 1.1em; display: block; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>Enterprise AI Arbitrage Hub</h1>
+    <p>High-intent B2B search traffic target documents:</p>
+    <ul>
+"""
+
+for file in sorted(md_files):
+    title = file.replace('.md', '').replace('-', ' ').title()
+    html_content += f'        <li class="card"><a href="{file}">{title}</a></li>\n'
+
+html_content += """
+    </ul>
+</body>
+</html>
+"""
+
+# index.html को generated_docs फोल्डर में सेव करें
+with open(os.path.join(output_dir, 'index.html'), 'w', encoding='utf-8') as f:
+    f.write(html_content)
+
+print("Successfully generated index.html for Cloudflare Pages!")
 
 if __name__ == "__main__":
     build_programmatic_pages()
