@@ -79,7 +79,7 @@ TARGET_CONFIGS = [
     }
 ]
 
-# मास्टर टेक्निकल ब्लूप्रिंट टेम्पलेट
+# मास्टर टेक्निकल ब्लूप्रिंट और ऑटो-मोनेटाइजेशन टेम्पलेट
 MARKDOWN_TEMPLATE = """# {keyword}
 
 ## Enterprise Architecture & Compliance Blueprint
@@ -89,6 +89,14 @@ For CTOs and CISOs managing sensitive multi-tenant infrastructure, deploying a *
 To provision secure runtime clusters, validate compliance frameworks, and activate enterprise pricing tiers, engineering leaders must initialize configuration through the official channel:
 
 👉 **[Access Certified {provider} Enterprise Portal]({partner_link})**
+
+---
+
+<div style="background: #f4f6f8; padding: 20px; border-radius: 8px; margin-top: 40px; border-left: 4px solid #0066cc;">
+    <h3>Need Enterprise Implementation?</h3>
+    <p>Deploying secure AI models like {provider} securely requires certified architecture. Get direct enterprise consultation and priority partner onboarding.</p>
+    <a href="{partner_link}" target="_blank" style="display: inline-block; background: #0066cc; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; font-weight: bold;">Request Enterprise Setup</a>
+</div>
 """
 
 def build_programmatic_pages():
@@ -97,6 +105,7 @@ def build_programmatic_pages():
     
     print(f"[Info] Total targets configured for generation: {len(TARGET_CONFIGS)}")
     
+    # 1. सभी टारगेट पेजेज (.md) और मोनेटाइजेशन लेयर जनरेट करें
     for index, config in enumerate(TARGET_CONFIGS):
         page_content = MARKDOWN_TEMPLATE.format(
             keyword=config["keyword"],
@@ -110,18 +119,11 @@ def build_programmatic_pages():
         with open(filename, "w", encoding="utf-8") as f:
             f.write(page_content)
         print(f"[+] Generated Target Page [{index+1}]: {filename}")
-import os
 
-# --- इस कोड को अपनी generator.py के आखिर में जोड़ दें ---
+    # 2. सभी जनरेटेड पेजेज की सूची से सुंदर index.html तैयार करें
+    md_files = [f for f in os.listdir(output_dir) if f.endswith('.md')]
 
-output_dir = "generated_docs"
-os.makedirs(output_dir, exist_ok=True)
-
-# फोल्डर की सभी .md फाइलों की लिस्ट बनाएं
-md_files = [f for f in os.listdir(output_dir) if f.endswith('.md')]
-
-# सुंदर HTML होमपेज का स्ट्रक्चर
-html_content = """<!DOCTYPE html>
+    html_content = """<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -144,22 +146,22 @@ html_content = """<!DOCTYPE html>
     <ul>
 """
 
-for file in sorted(md_files):
-    title = file.replace('.md', '').replace('-', ' ').title()
-    html_content += f'        <li class="card"><a href="{file}">{title}</a></li>\n'
+    for file in sorted(md_files):
+        title = file.replace('.md', '').replace('-', ' ').title()
+        html_content += f'        <li class="card"><a href="{file}">{title}</a></li>\n'
 
-html_content += """
+    html_content += """
     </ul>
 </body>
 </html>
 """
 
-# index.html को generated_docs फोल्डर में सेव करें
-with open(os.path.join(output_dir, 'index.html'), 'w', encoding='utf-8') as f:
-    f.write(html_content)
+    index_path = os.path.join(output_dir, 'index.html')
+    with open(index_path, 'w', encoding='utf-8') as f:
+        f.write(html_content)
 
-print("Successfully generated index.html for Cloudflare Pages!")
+    print("[+] Successfully generated index.html with embedded monetization!")
 
 if __name__ == "__main__":
     build_programmatic_pages()
-    print("सभी स्केल किए गए पेजेस सफलतापूर्वक तैयार हो गए हैं!")
+    print("सभी स्केल किए गए पेजेस और मोनेटाइजेशन लेयर सफलतापूर्वक तैयार हो गई है!")
